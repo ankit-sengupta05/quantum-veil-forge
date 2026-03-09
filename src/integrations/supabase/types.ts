@@ -14,6 +14,225 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_logs: {
+        Row: {
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          created_at: string
+          description: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: Database["public"]["Enums"]["activity_type"]
+          created_at?: string
+          description?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      encrypted_files: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          encrypted_file_url: string | null
+          encryption_method: Database["public"]["Enums"]["encryption_method"]
+          file_size_bytes: number | null
+          file_type: Database["public"]["Enums"]["file_type"]
+          id: string
+          is_public: boolean
+          metadata: Json | null
+          original_file_url: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          encrypted_file_url?: string | null
+          encryption_method?: Database["public"]["Enums"]["encryption_method"]
+          file_size_bytes?: number | null
+          file_type?: Database["public"]["Enums"]["file_type"]
+          id?: string
+          is_public?: boolean
+          metadata?: Json | null
+          original_file_url?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          encrypted_file_url?: string | null
+          encryption_method?: Database["public"]["Enums"]["encryption_method"]
+          file_size_bytes?: number | null
+          file_type?: Database["public"]["Enums"]["file_type"]
+          id?: string
+          is_public?: boolean
+          metadata?: Json | null
+          original_file_url?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      file_reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          file_id: string
+          id: string
+          rating: number
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          file_id: string
+          id?: string
+          rating: number
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          file_id?: string
+          id?: string
+          rating?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "file_reviews_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "encrypted_files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message: string
+          operation_id: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message: string
+          operation_id?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message?: string
+          operation_id?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_operation_id_fkey"
+            columns: ["operation_id"]
+            isOneToOne: false
+            referencedRelation: "operations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operations: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          encryption_method: Database["public"]["Enums"]["encryption_method"]
+          error_message: string | null
+          file_id: string | null
+          id: string
+          input_file_url: string | null
+          message_embedded: string | null
+          metadata: Json | null
+          operation_type: Database["public"]["Enums"]["operation_type"]
+          output_file_url: string | null
+          processing_time_ms: number | null
+          status: Database["public"]["Enums"]["operation_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          encryption_method?: Database["public"]["Enums"]["encryption_method"]
+          error_message?: string | null
+          file_id?: string | null
+          id?: string
+          input_file_url?: string | null
+          message_embedded?: string | null
+          metadata?: Json | null
+          operation_type: Database["public"]["Enums"]["operation_type"]
+          output_file_url?: string | null
+          processing_time_ms?: number | null
+          status?: Database["public"]["Enums"]["operation_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          encryption_method?: Database["public"]["Enums"]["encryption_method"]
+          error_message?: string | null
+          file_id?: string | null
+          id?: string
+          input_file_url?: string | null
+          message_embedded?: string | null
+          metadata?: Json | null
+          operation_type?: Database["public"]["Enums"]["operation_type"]
+          output_file_url?: string | null
+          processing_time_ms?: number | null
+          status?: Database["public"]["Enums"]["operation_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operations_file_id_fkey"
+            columns: ["file_id"]
+            isOneToOne: false
+            referencedRelation: "encrypted_files"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -44,15 +263,98 @@ export type Database = {
         }
         Relationships: []
       }
+      usage_statistics: {
+        Row: {
+          created_at: string
+          date: string
+          decode_count: number
+          encode_count: number
+          files_uploaded: number
+          id: string
+          storage_used_bytes: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          decode_count?: number
+          encode_count?: number
+          files_uploaded?: number
+          id?: string
+          storage_used_bytes?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          decode_count?: number
+          encode_count?: number
+          files_uploaded?: number
+          id?: string
+          storage_used_bytes?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      activity_type:
+        | "login"
+        | "logout"
+        | "encode"
+        | "decode"
+        | "file_upload"
+        | "file_delete"
+        | "profile_update"
+        | "settings_change"
+        | "export"
+        | "other"
+      app_role: "admin" | "moderator" | "user"
+      encryption_method: "lsb" | "dct" | "dwt" | "aes256" | "rsa" | "custom"
+      file_type: "image" | "audio" | "document" | "video" | "other"
+      operation_status:
+        | "pending"
+        | "processing"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      operation_type: "encode" | "decode"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -179,6 +481,30 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      activity_type: [
+        "login",
+        "logout",
+        "encode",
+        "decode",
+        "file_upload",
+        "file_delete",
+        "profile_update",
+        "settings_change",
+        "export",
+        "other",
+      ],
+      app_role: ["admin", "moderator", "user"],
+      encryption_method: ["lsb", "dct", "dwt", "aes256", "rsa", "custom"],
+      file_type: ["image", "audio", "document", "video", "other"],
+      operation_status: [
+        "pending",
+        "processing",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      operation_type: ["encode", "decode"],
+    },
   },
 } as const
